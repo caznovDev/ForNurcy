@@ -1,0 +1,27 @@
+{
+  "birthDay": "03",
+  "birthMonth": "03",
+  "birthYear": "2000",
+  "musicUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  "landingTitle": "Olá, meu amor.",
+  "landingSubtitle": "Preparei algo especial para o seu dia. Mas antes, preciso saber se você é mesmo quem eu penso...",
+  "winTitle": "Parabéns, Sherlockinha!",
+  "winSubtitle": "Você provou que é a dona do meu coração e mestre em investigação! Agora, deixe-me mostrar o que guardei para você...",
+  "portfolioItems": [
+    {
+      "title": "Nosso Começo",
+      "content": "Lembro de cada detalhe do dia em que te conheci. Foi o início da melhor história da minha vida.",
+      "image": "https://storage.googleapis.com/generativeai-downloads/images/ais-dev-yxjixhv2il3udv2yfdflux-175331373501.europe-west2.run.app/input_file_0.png"
+    },
+    {
+      "title": "Seu Sorriso",
+      "content": "Seu sorriso é meu refúgio favorito. Ele tem o poder de transformar qualquer dia cinzento em um festival de cores.",
+      "image": "https://storage.googleapis.com/generativeai-downloads/images/ais-dev-yxjixhv2il3udv2yfdflux-175331373501.europe-west2.run.app/input_file_1.png"
+    },
+    {
+      "title": "Cumplicidade",
+      "content": "Amo como a gente se entende sem dizer uma palavra. Nossa conexão é algo raro e precioso.",
+      "image": "https://storage.googleapis.com/generativeai-downloads/images/ais-dev-yxjixhv2il3udv2yfdflux-175331373501.europe-west2.run.app/input_file_2.png"
+    }
+  ]
+}
