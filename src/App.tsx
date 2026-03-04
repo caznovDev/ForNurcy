@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Sparkles, Gift, Music, ChevronRight, Stars, Volume2, VolumeX, Camera, Search, Trophy, Lock, Unlock, Settings, Save, X, Plus, Trash2, Layout, Type, Download, Globe, RefreshCw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -74,7 +74,12 @@ const HeartParticle = ({ delay, left, size }: { delay: number; left: string; siz
 export default function App() {
   const [data, setData] = useState<AppData>(DEFAULT_DATA);
   const [configUrl, setConfigUrl] = useState<string>(() => {
-    return localStorage.getItem('birthday_config_url') || '/config.json';
+    try {
+      return localStorage.getItem('birthday_config_url') || '/config.json';
+    } catch (e) {
+      console.error('LocalStorage access failed:', e);
+      return '/config.json';
+    }
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -96,7 +101,11 @@ export default function App() {
       if (!response.ok) throw new Error('Falha ao carregar o arquivo de configuração');
       const json = await response.json();
       setData(json);
-      localStorage.setItem('birthday_config_url', url);
+      try {
+        localStorage.setItem('birthday_config_url', url);
+      } catch (e) {
+        console.error('LocalStorage set failed:', e);
+      }
     } catch (err) {
       console.error(err);
       setError('Não foi possível carregar a configuração. Usando dados padrão.');
@@ -163,7 +172,7 @@ export default function App() {
   };
 
   const updatePortfolioItem = (index: number, updates: Partial<PortfolioItem>) => {
-    const newItems = [...data.portfolioItems];
+    const newItems = [...(data.portfolioItems || [])];
     newItems[index] = { ...newItems[index], ...updates };
     updateData({ portfolioItems: newItems });
   };
@@ -171,14 +180,14 @@ export default function App() {
   const addPortfolioItem = () => {
     updateData({
       portfolioItems: [
-        ...data.portfolioItems,
+        ...(data.portfolioItems || []),
         { title: "Novo Momento", content: "Escreva algo lindo aqui...", image: "" }
       ]
     });
   };
 
   const removePortfolioItem = (index: number) => {
-    const newItems = data.portfolioItems.filter((_, i) => i !== index);
+    const newItems = (data.portfolioItems || []).filter((_, i) => i !== index);
     updateData({ portfolioItems: newItems });
   };
 
@@ -376,7 +385,7 @@ export default function App() {
                 {adminTab === 'messages' && (
                   <div className="space-y-8">
                     <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-serif font-bold text-[#5d4037]">Itens do Portfólio ({data.portfolioItems.length})</h3>
+                      <h3 className="text-lg font-serif font-bold text-[#5d4037]">Itens do Portfólio ({(data.portfolioItems || []).length})</h3>
                       <button 
                         onClick={addPortfolioItem}
                         className="flex items-center gap-2 px-4 py-2 bg-pink-500 text-white rounded-full text-sm font-bold hover:bg-pink-600 transition-all"
@@ -386,7 +395,7 @@ export default function App() {
                     </div>
 
                     <div className="space-y-6">
-                      {data.portfolioItems.map((item, i) => (
+                      {(data.portfolioItems || []).map((item, i) => (
                         <div key={i} className="p-6 bg-pink-50/30 rounded-3xl border border-pink-100 relative group">
                           <button 
                             onClick={() => removePortfolioItem(i)}
@@ -612,7 +621,7 @@ export default function App() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {data.portfolioItems.map((item, i) => (
+                  {(data.portfolioItems || []).map((item, i) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, y: 20 }}
