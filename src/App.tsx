@@ -33,14 +33,18 @@ const DEFAULT_DATA: AppData = {
   birthYear: "2000",
   musicUrl: "/assets/audio/music.mp3",
   landingTitle: "Olá, meu amor.",
-  landingSubtitle: "Preparei algo especial para o seu dia. Mas antes, preciso saber se você é mesmo quem eu penso...",
-  winTitle: "Parabéns, Sherlockinha!",
-  winSubtitle: "Você provou que é a dona do meu coração e mestre em investigação! Agora, deixe-me mostrar o que guardei para você...",
-  portfolioItems: Array.from({ length: 7 }, (_, i) => ({
-    title: `Momento ${i + 1}`,
-    content: "Escreva algo lindo aqui...",
-    image: `/assets/images/image${i + 1}.jpg`
-  }))
+  landingSubtitle: "O tempo para quando estou contigo. Mas para avançar, precisas de provar que és a minha pessoa favorita...",
+  winTitle: "Sempre soube que eras tu.",
+  winSubtitle: "O meu coração nunca se engana. Agora, deixa-me levar-te numa viagem pelas nossas memórias...",
+  portfolioItems: [
+    { title: "O Início", content: "Onde tudo começou... Aquele primeiro olhar que mudou o meu mundo.", image: "/assets/images/image1.jpg" },
+    { title: "A Tua Melodia", content: "O teu riso é a minha melodia preferida. Podia ouvi-lo para sempre.", image: "/assets/images/image2.jpg" },
+    { title: "Pequenos Gestos", content: "Nos pequenos gestos, encontro o amor mais puro que alguma vez conheci.", image: "/assets/images/image3.jpg" },
+    { title: "Aventuras", content: "Cada aventura ao teu lado é um capítulo que quero ler mil vezes.", image: "/assets/images/image4.jpg" },
+    { title: "Porto Seguro", content: "És o meu porto seguro, a minha paz no meio do caos.", image: "/assets/images/image5.jpg" },
+    { title: "Amo-te", content: "Obrigado por seres exatamente quem és. Amo-te mais do que as palavras podem dizer.", image: "/assets/images/image6.jpg" },
+    { title: "O Futuro", content: "Este é apenas o início. O melhor ainda está para vir, prometo.", image: "/assets/images/image7.jpg" }
+  ]
 };
 
 interface FallingItem {
@@ -50,6 +54,31 @@ interface FallingItem {
   y: number;
   speed: number;
 }
+
+const Typewriter = ({ text, speed = 50, delay = 0 }: { text: string; speed?: number; delay?: number }) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setStarted(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  useEffect(() => {
+    if (!started) return;
+    
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayedText(text.slice(0, i + 1));
+      i++;
+      if (i >= text.length) clearInterval(interval);
+    }, speed);
+
+    return () => clearInterval(interval);
+  }, [text, speed, started]);
+
+  return <span>{displayedText}</span>;
+};
 
 const HeartParticle = ({ delay, left, size }: { delay: number; left: string; size: number }) => (
   <motion.div
@@ -563,10 +592,10 @@ export default function App() {
                   <Heart className="w-20 h-20 text-pink-400 fill-pink-100" />
                 </motion.div>
                 <h1 className="font-serif text-4xl md:text-5xl font-light text-[#5d4037] mb-6 tracking-tight">
-                  {data.landingTitle}
+                  <Typewriter text={data.landingTitle} speed={100} />
                 </h1>
-                <p className="text-[#8d6e63] text-lg md:text-xl mb-12 font-serif italic leading-relaxed">
-                  {data.landingSubtitle}
+                <p className="text-[#8d6e63] text-lg md:text-xl mb-12 font-serif italic leading-relaxed h-24">
+                  <Typewriter text={data.landingSubtitle} delay={1500} />
                 </p>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -588,10 +617,7 @@ export default function App() {
                 className="text-center w-full h-screen relative overflow-hidden flex flex-col items-center"
               >
                 <div className="mt-20 relative z-20 pointer-events-none">
-                  <span className="text-xs uppercase tracking-[0.4em] text-pink-400 font-bold mb-2 block">Caça Números</span>
-                  <h2 className="font-serif text-2xl md:text-3xl text-[#5d4037]">
-                    Encontre o {gameStage === 'day' ? 'DIA' : gameStage === 'month' ? 'MÊS' : 'ANO'} do seu nascimento
-                  </h2>
+                  <div className="h-16" />
                 </div>
 
                 <div className="absolute inset-0 z-10">
@@ -637,10 +663,10 @@ export default function App() {
                   </div>
                 </div>
                 <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#5d4037] mb-6">
-                  {data.winTitle}
+                  <Typewriter text={data.winTitle} speed={80} />
                 </h2>
-                <p className="text-[#8d6e63] text-lg md:text-xl mb-12 font-serif italic leading-relaxed">
-                  {data.winSubtitle}
+                <p className="text-[#8d6e63] text-lg md:text-xl mb-12 font-serif italic leading-relaxed h-24">
+                  <Typewriter text={data.winSubtitle} delay={2000} />
                 </p>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -700,8 +726,12 @@ export default function App() {
                             className="absolute inset-0 z-20 bg-white/95 backdrop-blur-sm rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-2xl border border-pink-50"
                           >
                             <Heart className="w-10 h-10 text-pink-400 mb-6" />
-                            <h3 className="font-serif text-2xl font-bold text-[#5d4037] mb-4">{item.title}</h3>
-                            <p className="text-[#795548] font-serif italic leading-relaxed">"{item.content}"</p>
+                            <h3 className="font-serif text-2xl font-bold text-[#5d4037] mb-4">
+                              <Typewriter text={item.title} speed={70} />
+                            </h3>
+                            <p className="text-[#795548] font-serif italic leading-relaxed">
+                              "<Typewriter text={item.content} delay={1000} />"
+                            </p>
                             <motion.button
                               onClick={(e) => { e.stopPropagation(); setSelectedItem(null); }}
                               className="mt-8 text-xs uppercase tracking-widest text-pink-400 font-bold"

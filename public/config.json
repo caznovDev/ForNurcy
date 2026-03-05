@@ -4,43 +4,43 @@
   "birthYear": "2000",
   "musicUrl": "/assets/audio/music.mp3",
   "landingTitle": "Olá, meu amor.",
-  "landingSubtitle": "Preparei algo especial para o seu dia. Mas antes, preciso saber se você é mesmo quem eu penso...",
-  "winTitle": "Parabéns, Sherlockinha!",
-  "winSubtitle": "Você provou que é a dona do meu coração e mestre em investigação! Agora, deixe-me mostrar o que guardei para você...",
+  "landingSubtitle": "O tempo para quando estou contigo. Mas para avançar, precisas de provar que és a minha pessoa favorita...",
+  "winTitle": "Sempre soube que eras tu.",
+  "winSubtitle": "O meu coração nunca se engana. Agora, deixa-me levar-te numa viagem pelas nossas memórias...",
   "portfolioItems": [
     {
-      "title": "Momento 1",
-      "content": "Lembro de cada detalhe do dia em que te conheci.",
+      "title": "O Início",
+      "content": "Onde tudo começou... Aquele primeiro olhar que mudou o meu mundo.",
       "image": "/assets/images/image1.jpg"
     },
     {
-      "title": "Momento 2",
-      "content": "Seu sorriso é meu refúgio favorito.",
+      "title": "A Tua Melodia",
+      "content": "O teu riso é a minha melodia preferida. Podia ouvi-lo para sempre.",
       "image": "/assets/images/image2.jpg"
     },
     {
-      "title": "Momento 3",
-      "content": "Amo nossa cumplicidade.",
+      "title": "Pequenos Gestos",
+      "content": "Nos pequenos gestos, encontro o amor mais puro que alguma vez conheci.",
       "image": "/assets/images/image3.jpg"
     },
     {
-      "title": "Momento 4",
-      "content": "Cada segundo ao seu lado é um presente.",
+      "title": "Aventuras",
+      "content": "Cada aventura ao teu lado é um capítulo que quero ler mil vezes.",
       "image": "/assets/images/image4.jpg"
     },
     {
-      "title": "Momento 5",
-      "content": "Você é a melhor parte de mim.",
+      "title": "Porto Seguro",
+      "content": "És o meu porto seguro, a minha paz no meio do caos.",
       "image": "/assets/images/image5.jpg"
     },
     {
-      "title": "Momento 6",
-      "content": "Nossa história está apenas começando.",
+      "title": "Amo-te",
+      "content": "Obrigado por seres exatamente quem és. Amo-te mais do que as palavras podem dizer.",
       "image": "/assets/images/image6.jpg"
     },
     {
-      "title": "Momento 7",
-      "content": "Te amo para sempre.",
+      "title": "O Futuro",
+      "content": "Este é apenas o início. O melhor ainda está para vir, prometo.",
       "image": "/assets/images/image7.jpg"
     }
   ]
