@@ -22,33 +22,34 @@ interface AppData {
   portfolioItems: PortfolioItem[];
 }
 
+const MONTH_NAMES = [
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+];
+
 const DEFAULT_DATA: AppData = {
   birthDay: "03",
   birthMonth: "03",
   birthYear: "2000",
-  musicUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  musicUrl: "/assets/audio/music.mp3",
   landingTitle: "Olá, meu amor.",
   landingSubtitle: "Preparei algo especial para o seu dia. Mas antes, preciso saber se você é mesmo quem eu penso...",
   winTitle: "Parabéns, Sherlockinha!",
   winSubtitle: "Você provou que é a dona do meu coração e mestre em investigação! Agora, deixe-me mostrar o que guardei para você...",
-  portfolioItems: [
-    {
-      title: "Nosso Começo",
-      content: "Lembro de cada detalhe do dia em que te conheci. Foi o início da melhor história da minha vida.",
-      image: "https://storage.googleapis.com/generativeai-downloads/images/ais-dev-yxjixhv2il3udv2yfdflux-175331373501.europe-west2.run.app/input_file_0.png"
-    },
-    {
-      title: "Seu Sorriso",
-      content: "Seu sorriso é meu refúgio favorito. Ele tem o poder de transformar qualquer dia cinzento em um festival de cores.",
-      image: "https://storage.googleapis.com/generativeai-downloads/images/ais-dev-yxjixhv2il3udv2yfdflux-175331373501.europe-west2.run.app/input_file_1.png"
-    },
-    {
-      title: "Cumplicidade",
-      content: "Amo como a gente se entende sem dizer uma palavra. Nossa conexão é algo raro e precioso.",
-      image: "https://storage.googleapis.com/generativeai-downloads/images/ais-dev-yxjixhv2il3udv2yfdflux-175331373501.europe-west2.run.app/input_file_2.png"
-    }
-  ]
+  portfolioItems: Array.from({ length: 7 }, (_, i) => ({
+    title: `Momento ${i + 1}`,
+    content: "Escreva algo lindo aqui...",
+    image: `/assets/images/image${i + 1}.jpg`
+  }))
 };
+
+interface FallingItem {
+  id: number;
+  value: string;
+  x: number;
+  y: number;
+  speed: number;
+}
 
 const HeartParticle = ({ delay, left, size }: { delay: number; left: string; size: number }) => (
   <motion.div
@@ -87,7 +88,7 @@ export default function App() {
   const [view, setView] = useState<'landing' | 'game' | 'win' | 'portfolio' | 'admin'>('landing');
   const [adminTab, setAdminTab] = useState<'general' | 'music' | 'messages' | 'config'>('general');
   const [gameStage, setGameStage] = useState<'day' | 'month' | 'year'>('day');
-  const [numbers, setNumbers] = useState<string[]>([]);
+  const [fallingItems, setFallingItems] = useState<FallingItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -141,25 +142,64 @@ export default function App() {
 
   // Game Logic
   useEffect(() => {
-    if (view === 'game') {
-      generateNumbers();
+    if (view !== 'game') {
+      setFallingItems([]);
+      return;
     }
+
+    const interval = setInterval(() => {
+      setFallingItems(prev => {
+        const target = gameStage === 'day' ? data.birthDay : 
+                      gameStage === 'month' ? MONTH_NAMES[parseInt(data.birthMonth) - 1] : 
+                      data.birthYear;
+        
+        // Move existing items
+        const movedItems = prev.map(item => ({ ...item, y: item.y + item.speed }));
+        
+        // Filter out items that fell off
+        const filteredItems = movedItems.filter(item => item.y < 110);
+
+        // Spawn new item occasionally
+        if (Math.random() < 0.1 && filteredItems.length < 15) {
+          const newItem: FallingItem = {
+            id: Math.random(),
+            value: generateRandomValue(gameStage, target),
+            x: Math.random() * 80 + 10, // 10% to 90% width
+            y: -10,
+            speed: Math.random() * 0.5 + 0.5
+          };
+          return [...filteredItems, newItem];
+        }
+
+        return filteredItems;
+      });
+    }, 30);
+
+    return () => clearInterval(interval);
   }, [view, gameStage, data]);
 
-  const generateNumbers = () => {
-    const target = gameStage === 'day' ? data.birthDay : gameStage === 'month' ? data.birthMonth : data.birthYear;
-    const newNumbers = [target];
-    while (newNumbers.length < 12) {
-      const randomNum = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-      if (!newNumbers.includes(randomNum)) newNumbers.push(randomNum);
+  const generateRandomValue = (stage: 'day' | 'month' | 'year', target: string) => {
+    // 20% chance to spawn the target
+    if (Math.random() < 0.2) return target;
+    
+    if (stage === 'day') {
+      return Math.floor(Math.random() * 31 + 1).toString().padStart(2, '0');
+    } else if (stage === 'month') {
+      return MONTH_NAMES[Math.floor(Math.random() * 12)];
+    } else {
+      const year = parseInt(data.birthYear) || 2000;
+      return (year + Math.floor(Math.random() * 40 - 20)).toString();
     }
-    setNumbers(newNumbers.sort(() => Math.random() - 0.5));
   };
 
-  const handleNumberClick = (num: string) => {
-    const target = gameStage === 'day' ? data.birthDay : gameStage === 'month' ? data.birthMonth : data.birthYear;
-    if (num === target) {
+  const handleItemClick = (item: FallingItem) => {
+    const target = gameStage === 'day' ? data.birthDay : 
+                  gameStage === 'month' ? MONTH_NAMES[parseInt(data.birthMonth) - 1] : 
+                  data.birthYear;
+
+    if (item.value === target) {
       triggerConfetti();
+      setFallingItems([]);
       if (gameStage === 'day') setGameStage('month');
       else if (gameStage === 'month') setGameStage('year');
       else setView('win');
@@ -542,36 +582,41 @@ export default function App() {
             {view === 'game' && (
               <motion.div
                 key="game"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-center px-4 w-full max-w-2xl relative z-10"
+                className="text-center w-full h-screen relative overflow-hidden flex flex-col items-center"
               >
-                <div className="mb-8">
+                <div className="mt-20 relative z-20 pointer-events-none">
                   <span className="text-xs uppercase tracking-[0.4em] text-pink-400 font-bold mb-2 block">Caça Números</span>
                   <h2 className="font-serif text-2xl md:text-3xl text-[#5d4037]">
                     Encontre o {gameStage === 'day' ? 'DIA' : gameStage === 'month' ? 'MÊS' : 'ANO'} do seu nascimento
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 md:gap-6">
-                  {numbers.map((num, i) => (
-                    <motion.button
-                      key={`${gameStage}-${i}`}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                      whileHover={{ scale: 1.1, backgroundColor: "#fff" }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => handleNumberClick(num)}
-                      className="aspect-square flex items-center justify-center bg-white/50 backdrop-blur-sm border border-pink-100 rounded-2xl text-2xl md:text-3xl font-serif text-[#5d4037] shadow-sm hover:shadow-md transition-all"
-                    >
-                      {num}
-                    </motion.button>
-                  ))}
+                <div className="absolute inset-0 z-10">
+                  <AnimatePresence>
+                    {fallingItems.map((item) => (
+                      <motion.button
+                        key={item.id}
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.5 }}
+                        onClick={() => handleItemClick(item)}
+                        className="absolute px-4 py-2 bg-white/60 backdrop-blur-sm border border-pink-100 rounded-full text-xl md:text-2xl font-serif text-[#5d4037] shadow-sm hover:shadow-md transition-shadow whitespace-nowrap"
+                        style={{ 
+                          left: `${item.x}%`, 
+                          top: `${item.y}%`,
+                          transform: 'translateX(-50%)'
+                        }}
+                      >
+                        {item.value}
+                      </motion.button>
+                    ))}
+                  </AnimatePresence>
                 </div>
                 
-                <div className="mt-12 flex justify-center gap-3">
+                <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex justify-center gap-3 z-20">
                   <div className={`w-3 h-3 rounded-full ${gameStage === 'day' ? 'bg-pink-500' : 'bg-pink-100'}`} />
                   <div className={`w-3 h-3 rounded-full ${gameStage === 'month' ? 'bg-pink-500' : 'bg-pink-100'}`} />
                   <div className={`w-3 h-3 rounded-full ${gameStage === 'year' ? 'bg-pink-500' : 'bg-pink-100'}`} />

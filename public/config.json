@@ -2,26 +2,46 @@
   "birthDay": "03",
   "birthMonth": "03",
   "birthYear": "2000",
-  "musicUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  "musicUrl": "/assets/audio/music.mp3",
   "landingTitle": "Olá, meu amor.",
   "landingSubtitle": "Preparei algo especial para o seu dia. Mas antes, preciso saber se você é mesmo quem eu penso...",
   "winTitle": "Parabéns, Sherlockinha!",
   "winSubtitle": "Você provou que é a dona do meu coração e mestre em investigação! Agora, deixe-me mostrar o que guardei para você...",
   "portfolioItems": [
     {
-      "title": "Nosso Começo",
-      "content": "Lembro de cada detalhe do dia em que te conheci. Foi o início da melhor história da minha vida.",
-      "image": "https://storage.googleapis.com/generativeai-downloads/images/ais-dev-yxjixhv2il3udv2yfdflux-175331373501.europe-west2.run.app/input_file_0.png"
+      "title": "Momento 1",
+      "content": "Lembro de cada detalhe do dia em que te conheci.",
+      "image": "/assets/images/image1.jpg"
     },
     {
-      "title": "Seu Sorriso",
-      "content": "Seu sorriso é meu refúgio favorito. Ele tem o poder de transformar qualquer dia cinzento em um festival de cores.",
-      "image": "https://storage.googleapis.com/generativeai-downloads/images/ais-dev-yxjixhv2il3udv2yfdflux-175331373501.europe-west2.run.app/input_file_1.png"
+      "title": "Momento 2",
+      "content": "Seu sorriso é meu refúgio favorito.",
+      "image": "/assets/images/image2.jpg"
     },
     {
-      "title": "Cumplicidade",
-      "content": "Amo como a gente se entende sem dizer uma palavra. Nossa conexão é algo raro e precioso.",
-      "image": "https://storage.googleapis.com/generativeai-downloads/images/ais-dev-yxjixhv2il3udv2yfdflux-175331373501.europe-west2.run.app/input_file_2.png"
+      "title": "Momento 3",
+      "content": "Amo nossa cumplicidade.",
+      "image": "/assets/images/image3.jpg"
+    },
+    {
+      "title": "Momento 4",
+      "content": "Cada segundo ao seu lado é um presente.",
+      "image": "/assets/images/image4.jpg"
+    },
+    {
+      "title": "Momento 5",
+      "content": "Você é a melhor parte de mim.",
+      "image": "/assets/images/image5.jpg"
+    },
+    {
+      "title": "Momento 6",
+      "content": "Nossa história está apenas começando.",
+      "image": "/assets/images/image6.jpg"
+    },
+    {
+      "title": "Momento 7",
+      "content": "Te amo para sempre.",
+      "image": "/assets/images/image7.jpg"
     }
   ]
 }
