@@ -30,21 +30,43 @@ const MONTH_NAMES = [
 const DEFAULT_DATA: AppData = {
   birthDay: "03",
   birthMonth: "03",
-  birthYear: "2000",
-  musicUrl: "/assets/audio/music.mp3",
-  landingTitle: "Olá, meu amor.",
-  landingSubtitle: "O tempo para quando estou contigo. Mas para avançar, precisas de provar que és a minha pessoa favorita...",
-  winTitle: "Sempre soube que eras tu.",
-  winSubtitle: "O meu coração nunca se engana. Agora, deixa-me levar-te numa viagem pelas nossas memórias...",
+  birthYear: "2008",
+  musicUrl: "/assets/audio.mp3",
+  landingTitle: "Oi, Bei...",
+  landingSubtitle: "Feliz aniversário!. \n\nVocê vai precisar de passar por um teste de identidade...\n\nNota: Eu clicaria no ícone de audio que está no lado superior direito... só pra dar um climinha.\n\nBoa sorte!",
+  winTitle: "Parabéns, Sherlockinha!",
+  winSubtitle: "Vejo que você têm veia de uma agente, isso é bom.\nAgora que provou quem você é, pode passar para a página principal...",
   portfolioItems: [
-    { title: "Parabéns", content: "Minha bela adormecida, parabéns por mais um ano de vida!", image: "/assets/images/image1.jpg" },
-    { title: "A Nossa História", content: "Agradeço por seres essa parceira dedicada, por valorizares aquilo que estamos a construir e por permitires que eu faça parte da tua história.", image: "/assets/images/image2.jpg" },
-    { title: "A Tua Determinação", content: "Admiro profundamente a tua determinação e a forma como encaras a vida com esse sorriso contagiante, mesmo quando o mundo parece não estar a sorrir para ti.", image: "/assets/images/image3.jpg" },
-    { title: "O Teu Cuidado", content: "Amo o teu jeito de te preocupares genuinamente com o bem-estar das pessoas que amas e a maneira como tentas ajudá-las a tornarem-se melhores.", image: "/assets/images/image4.jpg" },
-    { title: "A Minha Visão", content: "Às vezes penso que, se mais pessoas conseguissem ver esse lado teu como eu vejo, talvez pensassem duas vezes antes de te magoar.", image: "/assets/images/image5.jpg" },
-    { title: "A Minha Melhor Escolha", content: "Tu és, sem dúvida, a minha escolha mais complexa — mas, de longe, a melhor que já fiz.", image: "/assets/images/image6.jpg" },
-    { title: "Resiliência", content: "Quando a vida te dá limões, tu não apenas fazes limonada: ainda ofereces um copo a quem quiser, de bom grado.", image: "/assets/images/image7.jpg" },
-    { title: "O Meu Desejo", content: "Desejo-te muitos e muitos anos de vida. Que Deus continue a guiar os teus passos e a realizar os teus sonhos mais profundos e os desejos mais sinceros do teu coração.", image: "/assets/images/image8.jpg" }
+    {
+      "title": "",
+      "content": "Minha bela adormecida, parabéns por mais um ano de vida!",
+      "image": "/assets/1.jpg"
+    },
+    {
+      "title": "",
+      "content": "Agradeço por seres essa parceira dedicada, por valorizares aquilo que estamos a construir e por permitires que eu faça parte da tua história.",
+      "image": "/assets/2.jpg"
+    },
+    {
+      "title": "",
+      "content": "Admiro profundamente a tua determinação e a forma como encaras a vida com esse sorriso contagiante, mesmo quando o mundo parece não estar a sorrir para ti.",
+      "image": "/assets/3.jpg"
+    },
+    {
+      "title": "",
+      "content": "Amo o teu jeito de te preocupares genuinamente com o bem-estar das pessoas que amas e a maneira como tentas ajudá-las a tornarem-se melhores.\n\nÀs vezes penso que, se mais pessoas conseguissem ver esse lado teu como eu vejo, talvez pensassem duas vezes antes de te magoar.",
+      "image": "/assets/4.jpg"
+    },
+    {
+      "title": "",
+      "content": "Desejo-te muitos e muitos anos de vida. Que Deus continue a guiar os teus passos e a realizar os teus sonhos mais profundos e os desejos mais sinceros do teu coração.",
+      "image": "/assets/5.jpg"
+    },
+    {
+      "title": "",
+      "content": "Feliz Aniversário .",
+      "image": "/assets/6.jpg"
+    }
   ]
 };
 
@@ -129,10 +151,15 @@ export default function App() {
 
   // Fetch surprise status from server on mount
   useEffect(() => {
+    const localShown = localStorage.getItem('surprise_shown_v1') === 'true';
+    if (localShown) {
+      setHasShownSpecialPhoto(true);
+    }
+
     fetch('/api/surprise-status')
       .then(res => res.json())
       .then(data => {
-        if (data.shown) {
+        if (data.shown || localShown) {
           setHasShownSpecialPhoto(true);
         }
       })
@@ -309,6 +336,8 @@ export default function App() {
       fetch('/api/surprise-shown', { method: 'POST' })
         .catch(err => console.error('Failed to update surprise status:', err));
 
+      localStorage.setItem('surprise_shown_v1', 'true');
+
       setTimeout(() => {
         setIsShowingSpecialPhoto(false);
         setSelectedItem(index);
@@ -379,7 +408,7 @@ export default function App() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.5 }}
-              src="https://picsum.photos/seed/romance_special/1200/1800"
+              src="/assets/surpresa.jpg"
               alt="Special Moment"
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
@@ -767,7 +796,7 @@ export default function App() {
                   onClick={() => setView('portfolio')}
                   className="bg-[#5d4037] text-white px-12 py-4 rounded-full font-medium shadow-xl flex items-center gap-3 mx-auto"
                 >
-                  Ver Meu Presente <ChevronRight className="w-5 h-5" />
+                  continuar <ChevronRight className="w-5 h-5" />
                 </motion.button>
               </motion.div>
             )}
