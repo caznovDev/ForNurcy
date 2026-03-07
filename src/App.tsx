@@ -126,6 +126,18 @@ export default function App() {
   const [hasShownSpecialPhoto, setHasShownSpecialPhoto] = useState(false);
   const [isShowingSpecialPhoto, setIsShowingSpecialPhoto] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+
+  // Fetch surprise status from server on mount
+  useEffect(() => {
+    fetch('/api/surprise-status')
+      .then(res => res.json())
+      .then(data => {
+        if (data.shown) {
+          setHasShownSpecialPhoto(true);
+        }
+      })
+      .catch(err => console.error('Failed to fetch surprise status:', err));
+  }, []);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Load configuration
@@ -292,6 +304,11 @@ export default function App() {
     if (isLastItem && !hasShownSpecialPhoto) {
       setIsShowingSpecialPhoto(true);
       setHasShownSpecialPhoto(true);
+      
+      // Update server status so it's never shown again until next build
+      fetch('/api/surprise-shown', { method: 'POST' })
+        .catch(err => console.error('Failed to update surprise status:', err));
+
       setTimeout(() => {
         setIsShowingSpecialPhoto(false);
         setSelectedItem(index);
