@@ -1,0 +1,47 @@
+{
+  "birthDay": "03",
+  "birthMonth": "03",
+  "birthYear": "2008",
+  "musicUrl": "/assets/audio/audio.mp3",
+  "landingTitle": "Oi, Bei...",
+  "landingSubtitle": "Feliz aniversário!. \n\nVocê vai precisar de passar por um teste de identidade...\n\nNota: Eu clicaria no ícone de audio que está no lado superior direito... só pra dar um climinha.",
+  "winTitle": "Parabéns, Sherlockinha!",
+  "winSubtitle": "Vejo que você têm veia de uma agente, isso é bom.\nAgora que provou quem você é, pode passar para a página principal...",
+  "portfolioItems": [
+    {
+      "title": "Momento 1",
+      "content": "Lembro de cada detalhe do dia em que te conheci.",
+      "image": "/assets/images/image1.jpg"
+    },
+    {
+      "title": "Momento 2",
+      "content": "Seu sorriso é meu refúgio favorito.",
+      "image": "/assets/images/image2.jpg"
+    },
+    {
+      "title": "Momento 3",
+      "content": "Amo nossa cumplicidade.",
+      "image": "/assets/images/image3.jpg"
+    },
+    {
+      "title": "Momento 4",
+      "content": "Cada segundo ao seu lado é um presente.",
+      "image": "/assets/images/image4.jpg"
+    },
+    {
+      "title": "Momento 5",
+      "content": "Você é a melhor parte de mim.",
+      "image": "/assets/images/image5.jpg"
+    },
+    {
+      "title": "Momento 6",
+      "content": "Nossa história está apenas começando.",
+      "image": "/assets/images/image6.jpg"
+    },
+    {
+      "title": "Momento 7",
+      "content": "Te amo para sempre.",
+      "image": "/assets/images/image7.jpg"
+    }
+  ]
+}
