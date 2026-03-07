@@ -383,15 +383,6 @@ export default function App() {
         >
           {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5 animate-pulse" />}
         </motion.button>
-        
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setView(view === 'admin' ? 'landing' : 'admin')}
-          className="p-3 bg-white/80 backdrop-blur-md rounded-full shadow-md text-gray-500 border border-gray-100"
-        >
-          {view === 'admin' ? <X className="w-5 h-5" /> : <Settings className="w-5 h-5" />}
-        </motion.button>
       </div>
 
       {/* Special Interstitial Photo */}
@@ -809,8 +800,7 @@ export default function App() {
                 className="w-full max-w-6xl px-4 py-12 relative z-10"
               >
                 <div className="text-center mb-16">
-                  <span className="text-xs uppercase tracking-[0.5em] text-pink-400 font-bold mb-4 block">Galeria de Amor</span>
-                  <h2 className="font-serif text-4xl md:text-5xl text-[#5d4037]">Para Você</h2>
+                  <span className="text-xs uppercase tracking-[0.5em] text-pink-400 font-bold mb-4 block">Galeria</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
