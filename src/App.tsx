@@ -37,13 +37,14 @@ const DEFAULT_DATA: AppData = {
   winTitle: "Sempre soube que eras tu.",
   winSubtitle: "O meu coração nunca se engana. Agora, deixa-me levar-te numa viagem pelas nossas memórias...",
   portfolioItems: [
-    { title: "O Início", content: "Onde tudo começou... Aquele primeiro olhar que mudou o meu mundo.", image: "/assets/images/image1.jpg" },
-    { title: "A Tua Melodia", content: "O teu riso é a minha melodia preferida. Podia ouvi-lo para sempre.", image: "/assets/images/image2.jpg" },
-    { title: "Pequenos Gestos", content: "Nos pequenos gestos, encontro o amor mais puro que alguma vez conheci.", image: "/assets/images/image3.jpg" },
-    { title: "Aventuras", content: "Cada aventura ao teu lado é um capítulo que quero ler mil vezes.", image: "/assets/images/image4.jpg" },
-    { title: "Porto Seguro", content: "És o meu porto seguro, a minha paz no meio do caos.", image: "/assets/images/image5.jpg" },
-    { title: "Amo-te", content: "Obrigado por seres exatamente quem és. Amo-te mais do que as palavras podem dizer.", image: "/assets/images/image6.jpg" },
-    { title: "O Futuro", content: "Este é apenas o início. O melhor ainda está para vir, prometo.", image: "/assets/images/image7.jpg" }
+    { title: "Parabéns", content: "Minha bela adormecida, parabéns por mais um ano de vida!", image: "/assets/images/image1.jpg" },
+    { title: "A Nossa História", content: "Agradeço por seres essa parceira dedicada, por valorizares aquilo que estamos a construir e por permitires que eu faça parte da tua história.", image: "/assets/images/image2.jpg" },
+    { title: "A Tua Determinação", content: "Admiro profundamente a tua determinação e a forma como encaras a vida com esse sorriso contagiante, mesmo quando o mundo parece não estar a sorrir para ti.", image: "/assets/images/image3.jpg" },
+    { title: "O Teu Cuidado", content: "Amo o teu jeito de te preocupares genuinamente com o bem-estar das pessoas que amas e a maneira como tentas ajudá-las a tornarem-se melhores.", image: "/assets/images/image4.jpg" },
+    { title: "A Minha Visão", content: "Às vezes penso que, se mais pessoas conseguissem ver esse lado teu como eu vejo, talvez pensassem duas vezes antes de te magoar.", image: "/assets/images/image5.jpg" },
+    { title: "A Minha Melhor Escolha", content: "Tu és, sem dúvida, a minha escolha mais complexa — mas, de longe, a melhor que já fiz.", image: "/assets/images/image6.jpg" },
+    { title: "Resiliência", content: "Quando a vida te dá limões, tu não apenas fazes limonada: ainda ofereces um copo a quem quiser, de bom grado.", image: "/assets/images/image7.jpg" },
+    { title: "O Meu Desejo", content: "Desejo-te muitos e muitos anos de vida. Que Deus continue a guiar os teus passos e a realizar os teus sonhos mais profundos e os desejos mais sinceros do teu coração.", image: "/assets/images/image8.jpg" }
   ]
 };
 
@@ -53,6 +54,9 @@ interface FallingItem {
   x: number;
   y: number;
   speed: number;
+  rotation: number;
+  rotationSpeed: number;
+  isWrong?: boolean;
 }
 
 const Typewriter = ({ text, speed = 50, delay = 0 }: { text: string; speed?: number; delay?: number }) => {
@@ -189,13 +193,15 @@ export default function App() {
         const filteredItems = movedItems.filter(item => item.y < 110);
 
         // Spawn new item occasionally
-        if (Math.random() < 0.1 && filteredItems.length < 15) {
+        if (Math.random() < 0.12 && filteredItems.length < 18) {
           const newItem: FallingItem = {
             id: Math.random(),
             value: generateRandomValue(gameStage, target),
-            x: Math.random() * 80 + 10, // 10% to 90% width
-            y: -10,
-            speed: Math.random() * 0.5 + 0.5
+            x: Math.random() * 85 + 7.5, // Better spread
+            y: -15,
+            speed: Math.random() * 0.4 + 0.3, // Slightly slower for better UX
+            rotation: Math.random() * 360,
+            rotationSpeed: (Math.random() - 0.5) * 2
           };
           return [...filteredItems, newItem];
         }
@@ -232,6 +238,12 @@ export default function App() {
       if (gameStage === 'day') setGameStage('month');
       else if (gameStage === 'month') setGameStage('year');
       else setView('win');
+    } else {
+      // Visual feedback for wrong item
+      setFallingItems(prev => prev.map(i => i.id === item.id ? { ...i, isWrong: true } : i));
+      setTimeout(() => {
+        setFallingItems(prev => prev.map(i => i.id === item.id ? { ...i, isWrong: false } : i));
+      }, 500);
     }
   };
 
@@ -614,10 +626,18 @@ export default function App() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-center w-full h-screen relative overflow-hidden flex flex-col items-center"
+                className="text-center w-full h-screen relative overflow-hidden flex flex-col items-center bg-gradient-to-b from-[#fffafa] to-pink-50/20"
               >
-                <div className="mt-20 relative z-20 pointer-events-none">
-                  <div className="h-16" />
+                {/* Subtle Stage Indicator Top */}
+                <div className="absolute top-12 left-0 w-full px-8 flex justify-between items-center z-20 opacity-40">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${gameStage === 'day' ? 'bg-pink-500 scale-125' : 'bg-gray-300'}`} />
+                    <div className={`w-2 h-2 rounded-full ${gameStage === 'month' ? 'bg-pink-500 scale-125' : 'bg-gray-300'}`} />
+                    <div className={`w-2 h-2 rounded-full ${gameStage === 'year' ? 'bg-pink-500 scale-125' : 'bg-gray-300'}`} />
+                  </div>
+                  <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400">
+                    {gameStage === 'day' ? 'Fase 1' : gameStage === 'month' ? 'Fase 2' : 'Fase 3'}
+                  </div>
                 </div>
 
                 <div className="absolute inset-0 z-10">
@@ -625,11 +645,24 @@ export default function App() {
                     {fallingItems.map((item) => (
                       <motion.button
                         key={item.id}
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, scale: 0.5, y: -20 }}
+                        animate={{ 
+                          opacity: 1, 
+                          scale: 1, 
+                          y: 0,
+                          x: Math.sin(item.y / 10) * 15, // Swaying effect
+                          rotate: item.isWrong ? [0, -10, 10, -10, 10, 0] : item.rotation + (item.y * item.rotationSpeed)
+                        }}
                         exit={{ opacity: 0, scale: 1.5 }}
+                        transition={{
+                          rotate: item.isWrong ? { duration: 0.4 } : { duration: 0 }
+                        }}
                         onClick={() => handleItemClick(item)}
-                        className="absolute px-4 py-2 bg-white/60 backdrop-blur-sm border border-pink-100 rounded-full text-xl md:text-2xl font-serif text-[#5d4037] shadow-sm hover:shadow-md transition-shadow whitespace-nowrap"
+                        className={`absolute px-6 py-3 rounded-full text-xl md:text-2xl font-serif shadow-sm transition-all whitespace-nowrap border
+                          ${item.isWrong 
+                            ? 'bg-red-50 border-red-200 text-red-400 shadow-red-100' 
+                            : 'bg-white/70 backdrop-blur-md border-pink-100 text-[#5d4037] hover:bg-white hover:shadow-md active:scale-95'
+                          }`}
                         style={{ 
                           left: `${item.x}%`, 
                           top: `${item.y}%`,
@@ -642,10 +675,12 @@ export default function App() {
                   </AnimatePresence>
                 </div>
                 
-                <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex justify-center gap-3 z-20">
-                  <div className={`w-3 h-3 rounded-full ${gameStage === 'day' ? 'bg-pink-500' : 'bg-pink-100'}`} />
-                  <div className={`w-3 h-3 rounded-full ${gameStage === 'month' ? 'bg-pink-500' : 'bg-pink-100'}`} />
-                  <div className={`w-3 h-3 rounded-full ${gameStage === 'year' ? 'bg-pink-500' : 'bg-pink-100'}`} />
+                <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 z-20">
+                  <div className="flex gap-4">
+                    <div className={`h-1 w-8 rounded-full transition-all duration-500 ${gameStage === 'day' ? 'bg-pink-400 w-12' : 'bg-pink-100'}`} />
+                    <div className={`h-1 w-8 rounded-full transition-all duration-500 ${gameStage === 'month' ? 'bg-pink-400 w-12' : 'bg-pink-100'}`} />
+                    <div className={`h-1 w-8 rounded-full transition-all duration-500 ${gameStage === 'year' ? 'bg-pink-400 w-12' : 'bg-pink-100'}`} />
+                  </div>
                 </div>
               </motion.div>
             )}
