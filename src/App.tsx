@@ -123,6 +123,8 @@ export default function App() {
   const [gameStage, setGameStage] = useState<'day' | 'month' | 'year'>('day');
   const [fallingItems, setFallingItems] = useState<FallingItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const [hasShownSpecialPhoto, setHasShownSpecialPhoto] = useState(false);
+  const [isShowingSpecialPhoto, setIsShowingSpecialPhoto] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -284,6 +286,21 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
+  const handlePortfolioClick = (index: number) => {
+    const isLastItem = index === (data.portfolioItems?.length || 0) - 1;
+    
+    if (isLastItem && !hasShownSpecialPhoto) {
+      setIsShowingSpecialPhoto(true);
+      setHasShownSpecialPhoto(true);
+      setTimeout(() => {
+        setIsShowingSpecialPhoto(false);
+        setSelectedItem(index);
+      }, 2000);
+    } else {
+      setSelectedItem(selectedItem === index ? null : index);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#fffafa]">
@@ -330,6 +347,30 @@ export default function App() {
           {view === 'admin' ? <X className="w-5 h-5" /> : <Settings className="w-5 h-5" />}
         </motion.button>
       </div>
+
+      {/* Special Interstitial Photo */}
+      <AnimatePresence>
+        {isShowingSpecialPhoto && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+          >
+            <motion.img
+              initial={{ scale: 1.1, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              src="https://picsum.photos/seed/romance_special/1200/1800"
+              alt="Special Moment"
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-pink-500/10 mix-blend-overlay" />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence mode="wait">
         {view === 'admin' ? (
@@ -733,7 +774,7 @@ export default function App() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1 }}
-                      onClick={() => setSelectedItem(selectedItem === i ? null : i)}
+                      onClick={() => handlePortfolioClick(i)}
                       className="group relative cursor-pointer"
                     >
                       <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-lg transition-all duration-500 group-hover:shadow-2xl group-hover:-translate-y-2">
